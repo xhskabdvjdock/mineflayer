@@ -1,7 +1,24 @@
-if (typeof process !== 'undefined' && !process.browser && process.platform !== 'browser' && parseInt(process.versions.node.split('.')[0]) < 18) {
-  console.error('Your node version is currently', process.versions.node)
-  console.error('Please update it to a version >= 22.x.x from https://nodejs.org/')
-  process.exit(1)
-}
+const mineflayer = require('mineflayer')
+const express = require('express')
+const app = express()
+const port = process.env.PORT || 3000
 
-module.exports = require('./lib/loader.js')
+// خادم ويب بسيط لإبقاء الخدمة تعمل
+app.get('/', (req, res) => {
+  res.send('البوت يعمل الآن!')
+})
+
+app.listen(port, () => {
+  console.log(`خادم الويب يعمل على المنفذ ${port}`)
+})
+
+// إعدادات بوت ماين كرافت
+const bot = mineflayer.createBot({
+  host: 'theZ.aternos.me', 
+  port: 25565,
+  username: 'MyCloudBot',
+  // auth: 'microsoft' // أضفه إذا كنت تستخدم حساب رسمي
+})
+
+bot.on('spawn', () => console.log('البوت دخل السيرفر!'))
+bot.on('error', (err) => console.log('خطأ:', err))
