@@ -52,4 +52,7 @@
     "standard-markdown": "^7.1.0",
     "typescript": "^5.4.5"
   }
-}
+  }
+  "scripts": {
+    "start": "node index.js"
+  }
