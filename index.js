@@ -2,7 +2,7 @@ const mineflayer = require('mineflayer');
 
 const botOptions = {
     host: 'theZ.aternos.me', // ضع هنا الـ IP
-    port: 25565,                // البورت
+    port: 51580,                // البورت
     username: 'Ali_Bot_121',    // اسم البوت
     version: '1.21.1',          // تحديد الإصدار ضروري جداً هنا
     hideErrors: false           // لإظهار تفاصيل الخطأ إن حدث
