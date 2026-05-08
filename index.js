@@ -1,39 +1,43 @@
-const mineflayer = require('mineflayer')
-const express = require('express')
-const app = express()
-const port = process.env.PORT || 3000
+const mineflayer = require('mineflayer');
 
-// خادم ويب بسيط لإبقاء الخدمة تعمل
-app.get('/', (req, res) => {
-  res.send('البوت يعمل الآن!')
-})
+// إعدادات البوت - غير البيانات هنا حسب سيرفرك
+const botOptions = {
+    host: 'آي_بي_السيرفر_هنا', 
+    port: 25565,
+    username: 'Ali_Bot',
+    // version: '1.20.1' // فك التعليق عنها وحدد الإصدار إذا لزم الأمر
+};
 
-app.listen(port, () => {
-  console.log(`خادم الويب يعمل على المنفذ ${port}`)
-})
+function createBot() {
+    const bot = mineflayer.createBot(botOptions);
 
-// إعدادات بوت ماين كرافت
-const bot = mineflayer.createBot({
-  host: 'theZ.aternos.me', 
-  port: 25565,
-  username: 'MyCloudBot',
-  // auth: 'microsoft' // أضفه إذا كنت تستخدم حساب رسمي
-})
+    bot.on('spawn', () => {
+        console.log('✅ البوت دخل السيرفر بنجاح!');
+        bot.chat('أهلاً بالجميع، أنا بوت يعمل من Replit!');
+    });
 
-bot.on('spawn', () => console.log('البوت دخل السيرفر!'))
-bot.on('error', (err) => console.log('خطأ:', err))
-// التعامل مع الأخطاء المفاجئة ومنع توقف البوت
-bot.on('error', (err) => {
-  if (err.code === 'ECONNRESET') {
-    console.log('فقدنا الاتصال بالسيرفر، سنحاول مرة أخرى...');
-  } else {
-    console.log('حدث خطأ غير متوقع:', err);
-  }
-});
+    // التعامل مع خطأ ECONNRESET وغيره من الأخطاء
+    bot.on('error', (err) => {
+        console.log('❌ حدث خطأ في الاتصال:', err.code);
+        if (err.code === 'ECONNRESET') {
+            console.log('السيرفر قطع الاتصال فجأة، قد يكون بسبب الحماية أو الإصدار.');
+        }
+    });
 
-bot.on('end', () => {
-  console.log('انتهى الاتصال، جاري إعادة التشغيل بعد 5 ثوانٍ...');
-  setTimeout(() => {
-    // هنا يمكنك وضع دالة لإعادة إنشاء البوت
-  }, 5000);
-});
+    // إعادة الاتصال تلقائياً عند الخروج
+    bot.on('end', () => {
+        console.log('⚠️ تم قطع الاتصال، جاري إعادة المحاولة بعد 10 ثوانٍ...');
+        setTimeout(createBot, 10000); 
+    });
+
+    // رد فعل بسيط للبوت
+    bot.on('chat', (username, message) => {
+        if (username === bot.username) return;
+        if (message === 'hello') {
+            bot.chat(`أهلاً بك يا ${username}!`);
+        }
+    });
+}
+
+// تشغيل البوت لأول مرة
+createBot();
