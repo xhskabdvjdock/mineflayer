@@ -1,45 +1,18 @@
 const mineflayer = require('mineflayer');
+const keepAlive = require('./keep_alive');
 
-const botOptions = {
-    host: 'theZ.aternos.me', // ضع هنا الـ IP
-    port: 51580,                // البورت
-    username: 'Ali_Bot_121',    // اسم البوت
-    version: '1.21.1',          // تحديد الإصدار ضروري جداً هنا
-    hideErrors: false           // لإظهار تفاصيل الخطأ إن حدث
-};
+// تشغيل خادم الويب
+keepAlive();
 
-let bot;
+const bot = mineflayer.createBot({
+  host: 'theZ.aternos.me', // آي بي السيرفر
+  port: 51580,
+  username: 'Replit_Bot',
+});
 
-function createBot() {
-    console.log('🔄 جاري بدء الاتصال بإصدار 1.21.1...');
-    bot = mineflayer.createBot(botOptions);
+bot.on('spawn', () => {
+  console.log('تم دخول البوت بنجاح من Replit!');
+});
 
-    // عند الدخول بنجاح
-    bot.on('spawn', () => {
-        const pos = bot.entity.position;
-        console.log(`✅ البوت دخل السيرفر! مكانه الحالي: ${pos}`);
-    });
-
-    // الرد على الرسائل
-    bot.on('chat', (username, message) => {
-        if (username === bot.username) return;
-        if (message === 'ping') {
-            bot.chat('pong!');
-        }
-    });
-
-    // معالجة الأخطاء ومنع الانهيار
-    bot.on('error', (err) => {
-        console.log('❌ خطأ في الاتصال:');
-        console.error(err);
-    });
-
-    // إعادة الاتصال التلقائي في حال تم طرد البوت أو أغلق السيرفر
-    bot.on('end', (reason) => {
-        console.log(`⚠️ تم قطع الاتصال بسبب: ${reason}`);
-        console.log('🔄 سيتم إعادة المحاولة بعد 10 ثوانٍ...');
-        setTimeout(createBot, 10000);
-    });
-}
-
-createBot();
+// لمنع توقف الكود عند حدوث خطأ بسيط
+bot.on('error', (err) => console.log(err));
