@@ -2,7 +2,7 @@ const mineflayer = require('mineflayer');
 
 // إعدادات البوت - غير البيانات هنا حسب سيرفرك
 const botOptions = {
-    host: 'آي_بي_السيرفر_هنا', 
+    host: 'theZ.aternos.me', 
     port: 25565,
     username: 'Ali_Bot',
     // version: '1.20.1' // فك التعليق عنها وحدد الإصدار إذا لزم الأمر
