@@ -20,7 +20,7 @@ app.listen(PORT, () => {
 // ==========================================
 const botOptions = {
     host: 'theZ.aternos.me', // رابط السيرفر
-    port: 51580,             // البورت الخاص بالسيرفر
+    //port: 51580,             // البورت الخاص بالسيرفر
     username: 'Ali_Bot',     // اسم البوت
     version: '1.21.1',       // تحديد الإصدار 1.21.1
     hideErrors: false
