@@ -1,18 +1,24 @@
-const mineflayer = require('mineflayer');
-const keepAlive = require('./keep_alive');
+const mineflayer = require('mineflayer')
+const express = require('express')
+const app = express()
+const port = process.env.PORT || 3000
 
-// تشغيل خادم الويب
-keepAlive();
+// خادم ويب بسيط لإبقاء الخدمة تعمل
+app.get('/', (req, res) => {
+  res.send('البوت يعمل الآن!')
+})
 
+app.listen(port, () => {
+  console.log(`خادم الويب يعمل على المنفذ ${port}`)
+})
+
+// إعدادات بوت ماين كرافت
 const bot = mineflayer.createBot({
-  host: 'theZ.aternos.me', // آي بي السيرفر
+  host: 'theZ.aternos.me', 
   port: 51580,
-  username: 'Replit_Bot',
-});
+  username: 'MyCloudBot',
+  // auth: 'microsoft' // أضفه إذا كنت تستخدم حساب رسمي
+})
 
-bot.on('spawn', () => {
-  console.log('تم دخول البوت بنجاح من Replit!');
-});
-
-// لمنع توقف الكود عند حدوث خطأ بسيط
-bot.on('error', (err) => console.log(err));
+bot.on('spawn', () => console.log('البوت دخل السيرفر!'))
+bot.on('error', (err) => console.log('خطأ:', err))
