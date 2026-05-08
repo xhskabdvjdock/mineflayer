@@ -1,43 +1,45 @@
 const mineflayer = require('mineflayer');
 
-// إعدادات البوت - غير البيانات هنا حسب سيرفرك
 const botOptions = {
-    host: 'theZ.aternos.me', 
-    port: 25565,
-    username: 'Ali_Bot',
-    // version: '1.20.1' // فك التعليق عنها وحدد الإصدار إذا لزم الأمر
+    host: 'theZ.aternos.me', // ضع هنا الـ IP
+    port: 25565,                // البورت
+    username: 'Ali_Bot_121',    // اسم البوت
+    version: '1.21.1',          // تحديد الإصدار ضروري جداً هنا
+    hideErrors: false           // لإظهار تفاصيل الخطأ إن حدث
 };
 
+let bot;
+
 function createBot() {
-    const bot = mineflayer.createBot(botOptions);
+    console.log('🔄 جاري بدء الاتصال بإصدار 1.21.1...');
+    bot = mineflayer.createBot(botOptions);
 
+    // عند الدخول بنجاح
     bot.on('spawn', () => {
-        console.log('✅ البوت دخل السيرفر بنجاح!');
-        bot.chat('أهلاً بالجميع، أنا بوت يعمل من Replit!');
+        const pos = bot.entity.position;
+        console.log(`✅ البوت دخل السيرفر! مكانه الحالي: ${pos}`);
     });
 
-    // التعامل مع خطأ ECONNRESET وغيره من الأخطاء
-    bot.on('error', (err) => {
-        console.log('❌ حدث خطأ في الاتصال:', err.code);
-        if (err.code === 'ECONNRESET') {
-            console.log('السيرفر قطع الاتصال فجأة، قد يكون بسبب الحماية أو الإصدار.');
-        }
-    });
-
-    // إعادة الاتصال تلقائياً عند الخروج
-    bot.on('end', () => {
-        console.log('⚠️ تم قطع الاتصال، جاري إعادة المحاولة بعد 10 ثوانٍ...');
-        setTimeout(createBot, 10000); 
-    });
-
-    // رد فعل بسيط للبوت
+    // الرد على الرسائل
     bot.on('chat', (username, message) => {
         if (username === bot.username) return;
-        if (message === 'hello') {
-            bot.chat(`أهلاً بك يا ${username}!`);
+        if (message === 'ping') {
+            bot.chat('pong!');
         }
+    });
+
+    // معالجة الأخطاء ومنع الانهيار
+    bot.on('error', (err) => {
+        console.log('❌ خطأ في الاتصال:');
+        console.error(err);
+    });
+
+    // إعادة الاتصال التلقائي في حال تم طرد البوت أو أغلق السيرفر
+    bot.on('end', (reason) => {
+        console.log(`⚠️ تم قطع الاتصال بسبب: ${reason}`);
+        console.log('🔄 سيتم إعادة المحاولة بعد 10 ثوانٍ...');
+        setTimeout(createBot, 10000);
     });
 }
 
-// تشغيل البوت لأول مرة
 createBot();
