@@ -22,3 +22,18 @@ const bot = mineflayer.createBot({
 
 bot.on('spawn', () => console.log('البوت دخل السيرفر!'))
 bot.on('error', (err) => console.log('خطأ:', err))
+// التعامل مع الأخطاء المفاجئة ومنع توقف البوت
+bot.on('error', (err) => {
+  if (err.code === 'ECONNRESET') {
+    console.log('فقدنا الاتصال بالسيرفر، سنحاول مرة أخرى...');
+  } else {
+    console.log('حدث خطأ غير متوقع:', err);
+  }
+});
+
+bot.on('end', () => {
+  console.log('انتهى الاتصال، جاري إعادة التشغيل بعد 5 ثوانٍ...');
+  setTimeout(() => {
+    // هنا يمكنك وضع دالة لإعادة إنشاء البوت
+  }, 5000);
+});
